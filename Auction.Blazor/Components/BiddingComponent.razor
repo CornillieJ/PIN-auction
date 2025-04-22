@@ -1,0 +1,81 @@
+﻿@using Auction.Blazor.Hubs
+@using Auction.Core
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+<div class="border border-black">
+    <h3>@Product.Name</h3>
+    <p>Current highest price: @Product.HighestPrice</p>
+    <p>by @(string.IsNullOrWhiteSpace(Product.HighestBidder) ? "No one" : Product.HighestBidder)</p>
+    @if (IsExpired)
+    {
+        <h4>EXPIRED</h4>
+    }
+    else
+    {
+        <h4>Deadline: @(Product.Deadline.ToShortTimeString())</h4>
+    }
+</div>
+@if (!IsExpired)
+{
+    <div class="w-25 row border border-black my-2 mx-auto">
+        <InputText class="col-md-12" @bind-Value="_bidderName"></InputText>
+        <input class="col-md-3" type="number" @bind-value="_bidPrice"/>
+        <button @onclick="HandleSubmit">Send bid</button>
+    </div>
+}
+<div class="my-3 mx-auto">
+    @foreach (var bid in _bids)
+    {
+        <div class="row card">
+            <h5>@bid.BidderName</h5>
+            <p>@bid.Bid</p>
+        </div>
+    }
+</div>
+@code {
+    [Parameter] public Product Product { get; set; }
+    private bool IsExpired => Product.Deadline < DateTime.Now;
+    private HubConnection _hubConnection;
+    private List<BidModel> _bids = [];
+    private string _bidderName = string.Empty;
+    private decimal _bidPrice;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/AuctionHub"))
+            .Build();
+        
+        _hubConnection.On<Product>("ReceiveBid",ReceiveUpdate);
+        
+        await _hubConnection.StartAsync();
+        ResetInputs();
+    }
+
+    private async Task HandleSubmit()
+    {
+        await _hubConnection.SendAsync(nameof(AuctionHub.PlaceBid), Product.Id, _bidderName, _bidPrice);
+        ResetInputs();
+    }
+
+    private void ReceiveUpdate(Product product)
+    {
+        Product.HighestBidder = product.HighestBidder;
+        Product.HighestPrice = product.HighestPrice;
+        BidModel newBid = new()
+        {
+            Bid = product.HighestPrice,
+            BidderName = product.HighestBidder
+        };
+        _bids.Add(newBid);
+        ResetInputs();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ResetInputs()
+    {
+        _bidPrice = Product.HighestPrice + 1;
+        _bidderName = string.Empty;
+    }
+
+}

@@ -1,0 +1,43 @@
+﻿@page "/"
+@using Auction.Core
+@inject IAuctionService AuctionService
+@rendermode InteractiveServer
+<PageTitle>Home</PageTitle>
+<table class="table border border-black mx-auto">
+    <tr>
+        <th>Name</th>
+        <th>Current Price</th>
+        <th>Current Highest Bidder</th>
+    </tr>
+    @foreach (var product in _products)
+    {
+        <tr @onclick="@(() => ShowProduct(@product.Id))">
+            <td>@product.Name</td>
+            <td>@product.HighestPrice</td>
+            <td>@(string.IsNullOrWhiteSpace(product.HighestBidder) ? "No one" : product.HighestBidder)</td>
+        </tr>
+    }
+</table>
+@if (_showProduct)
+{
+    <BiddingComponent Product="_product"></BiddingComponent>
+}
+
+@code{
+    private List<Product> _products = new();
+    private Product _product = new();
+    private bool _showProduct;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _products = await AuctionService.GetProductsAsync();
+    }
+
+    private async Task ShowProduct(Guid id)
+    {
+        _product = await AuctionService.GetProductByIdAsync(id);
+        _showProduct = true;
+        StateHasChanged();
+    }
+
+}

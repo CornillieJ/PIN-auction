@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.Blazor", "Auction.Blazor\Auction.Blazor.csproj", "{FF496A66-35D0-4AD4-8FFF-480BB7C4832F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.Core", "Auction.Core\Auction.Core.csproj", "{047339DC-96F8-41C0-A59C-CEFB40F9636E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF496A66-35D0-4AD4-8FFF-480BB7C4832F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF496A66-35D0-4AD4-8FFF-480BB7C4832F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF496A66-35D0-4AD4-8FFF-480BB7C4832F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF496A66-35D0-4AD4-8FFF-480BB7C4832F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{047339DC-96F8-41C0-A59C-CEFB40F9636E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{047339DC-96F8-41C0-A59C-CEFB40F9636E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{047339DC-96F8-41C0-A59C-CEFB40F9636E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{047339DC-96F8-41C0-A59C-CEFB40F9636E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
