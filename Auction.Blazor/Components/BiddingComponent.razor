@@ -52,6 +52,13 @@
         ResetInputs();
     }
 
+    protected override Task OnParametersSetAsync()
+    {
+        _bids = [];
+        ResetInputs();
+        return base.OnParametersSetAsync();
+    }
+
     private async Task HandleSubmit()
     {
         await _hubConnection.SendAsync(nameof(AuctionHub.PlaceBid), Product.Id, _bidderName, _bidPrice);
